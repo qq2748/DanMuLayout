@@ -10,8 +10,24 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="danmu.habinbin.hello.danmulayout.MainActivity">
 
+    <danmu.habinbin.hello.library.DanMuLayout
+        android:id="@+id/dml"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <TextView
+        android:id="@+id/tv_start"
+        android:padding="10dp"
+        android:text="start"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_below="@id/tv_start"
+        android:id="@+id/tv_stop"
+        android:padding="10dp"
+        android:text="stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

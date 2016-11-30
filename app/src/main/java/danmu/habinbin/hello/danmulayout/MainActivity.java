@@ -33,10 +33,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         for(int i = 0; i<100;i++)
-            danMuList.add(new DanMu("adjaiojdoajdinenjkbhiuhadsdhuawiuh", DanMuInfo.DanMuType.TEXT,null));
+            danMuList.add(new DanMu("adjaiojdoajdinenjkbhiuhadsdhuawiuh", DanMuInfo.DanMuType.TEXT,"我的名字"));
 
         dml.addAllDanMu(danMuList);
-        dml.startDanMu();
+
+        dml.post(new Runnable() {
+            @Override
+            public void run() {
+                dml.addDanMuLike("哈哈,这是一个like弹幕,但其实就是view弹幕");
+                dml.addDanMuText("呵呵,这是一个纯text弹幕");
+                TextView textView = new TextView(MainActivity.this);
+                textView.setText("啊啊,这是一个view弹幕");
+                dml.addDanMuView(textView);
+                dml.startDanMu();
+            }
+        });
     }
 
     @OnClick(R.id.tv_start)

@@ -192,7 +192,7 @@ public class DanMuLayout extends RelativeLayout {
      * 2016年11月21日18:09:23
      * by bin
      */
-    private void addDanMuText(final String txt) {
+    public void addDanMuText(final String txt) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -211,6 +211,13 @@ public class DanMuLayout extends RelativeLayout {
     }
 
     public void addDanMuLike(final String name) {
+        View view = View.inflate(getContext(), R.layout.toast_live_like, null);
+        TextView textView = (TextView) view.findViewById(R.id.tv_text);
+        textView.setText(name + LIKE_STRING + "");
+        addDanMuView(view);
+    }
+
+    public void addDanMuView(final View view) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -218,26 +225,19 @@ public class DanMuLayout extends RelativeLayout {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        View view = View.inflate(getContext(), R.layout.toast_live_like, null);
-                        TextView textView = (TextView) view.findViewById(R.id.tv_text);
-                        textView.setText(name + LIKE_STRING + "");
-                        addDanMuView(view, verticalMargin);
+                        LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                        params.topMargin = verticalMargin;
+                        view.setLayoutParams(params);
+
+                        view.setTag(getRight() - getLeft() - getPaddingLeft());
+                        removeOccupied(verticalMargin);
+                        addView(view);
+                        viewList.add(view);
                     }
                 });
             }
         });
-    }
-
-    private void addDanMuView(View view, int verticalMargin) {
-        LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        params.topMargin = verticalMargin;
-        view.setLayoutParams(params);
-
-        view.setTag(getRight() - getLeft() - getPaddingLeft());
-        removeOccupied(verticalMargin);
-        addView(view);
-        viewList.add(view);
     }
 
     /**

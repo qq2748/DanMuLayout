@@ -37,17 +37,15 @@ public class MainActivity extends AppCompatActivity {
 
         dml.addAllDanMu(danMuList);
 
-        dml.post(new Runnable() {
-            @Override
-            public void run() {
-                dml.addDanMuLike("哈哈,这是一个like弹幕,但其实就是view弹幕");
-                dml.addDanMuText("呵呵,这是一个纯text弹幕");
-                TextView textView = new TextView(MainActivity.this);
-                textView.setText("啊啊,这是一个view弹幕");
-                dml.addDanMuView(textView);
-                dml.startDanMu();
-            }
-        });
+        dml.addDanMuLike("哈哈,这是一个like弹幕,但其实就是view弹幕");
+
+        dml.addDanMuText("呵呵,这是一个纯text弹幕");
+
+        TextView textView = new TextView(MainActivity.this);
+        textView.setText("啊啊,这是一个view弹幕");
+        dml.addDanMuView(textView);
+
+        dml.startDanMu();
     }
 
     @OnClick(R.id.tv_start)

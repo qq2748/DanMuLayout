@@ -16,6 +16,7 @@ import danmu.habinbin.hello.library.DanMuLayout;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String text2 = "哈哈,这是一个like弹幕,但其实就是view弹幕";
     @InjectView(R.id.dml)
     DanMuLayout dml;
     @InjectView(R.id.tv_start)
@@ -32,12 +33,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-        for(int i = 0; i<100;i++)
-            danMuList.add(new DanMu("adjaiojdoajdinenjkbhiuhadsdhuawiuh", DanMuInfo.DanMuType.TEXT,"我的名字"));
+        String text = "adjaiojdoajdinenjkbhiuhadsdhuawiuh";
+        for(int i = 0; i<100;i++) {
+            danMuList.add(new DanMu(text+=text2, DanMuInfo.DanMuType.TEXT,"我的名字"));
+        }
 
         dml.addAllDanMu(danMuList);
 
-        dml.addDanMuLike("哈哈,这是一个like弹幕,但其实就是view弹幕");
+        dml.addDanMuLike(text2);
 
         dml.addDanMuText("呵呵,这是一个纯text弹幕");
 

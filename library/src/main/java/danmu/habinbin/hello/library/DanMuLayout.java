@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextPaint;
@@ -134,7 +135,13 @@ public class DanMuLayout extends RelativeLayout {
         moveX();
         moveView();
         checkView();
-        if (danMuSwitch) invalidate();
+        if (danMuSwitch){
+            if(Build.VERSION.SDK_INT >= 16) {
+                this.postInvalidateOnAnimation();
+            } else {
+                this.postInvalidate();
+            }
+        }
     }
 
     private void checkView() {
@@ -182,7 +189,7 @@ public class DanMuLayout extends RelativeLayout {
              * create by bin
              */
             float speed = 5;
-            dMA.getPoint().x -= speed;//在该算法下 弹幕越长 速度越快
+            dMA.getPoint().x -= (measureText + screenWidth) / (DURING_TIME / 17);//在该算法下 弹幕越长 速度越快
             if (dMA.getPoint().x < -measureText) {
                 dMAList.remove(i);
             }
@@ -253,7 +260,6 @@ public class DanMuLayout extends RelativeLayout {
         while (true) {
             if(validHeightSpace==0){
                 validHeightSpace = getHeight();
-
             }
 
             int randomIndex = (int) (Math.random() * linesCount);
@@ -270,7 +276,11 @@ public class DanMuLayout extends RelativeLayout {
         danMuSwitch = true;
         handler.removeMessages(ADD_DANMU);
         handler.sendEmptyMessageDelayed(ADD_DANMU, DANMU_TIME_INTERVAL);
-        invalidate();
+        if(Build.VERSION.SDK_INT >= 16) {
+            this.postInvalidateOnAnimation();
+        } else {
+            this.postInvalidate();
+        }
     }
 
     public void stopDanMu() {

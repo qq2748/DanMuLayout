@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextPaint;
@@ -35,8 +36,8 @@ public class DanMuLayout extends RelativeLayout {
     private final static int DANMU_DEFAULT_LINES_COUNT = 10;
 
     /****************TIME start********************/
-    private final static int DANMU_TIME_INTERVAL = 1000;//弹幕发射时间间隔
-    private final static int DANMU_REMOVE_TIME = 5000;//移除占用时间间隔, 防止重叠
+    private final static int DANMU_TIME_INTERVAL = 500;//弹幕发射时间间隔
+    private final static int DANMU_REMOVE_TIME = 1000;//移除占用时间间隔, 防止重叠
     private final static int DURING_TIME = 12000;//每条text弹幕的持续时间
     /****************TIME end********************/
 
@@ -129,11 +130,18 @@ public class DanMuLayout extends RelativeLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        //TODO 其实不应该在OnDraw 调用  即将使用handler代替
         drawText(canvas);
         moveX();
         moveView();
         checkView();
-        if (danMuSwitch) invalidate();
+        if (danMuSwitch){
+            if(Build.VERSION.SDK_INT >= 16) {
+                this.postInvalidateOnAnimation();
+            } else {
+                this.postInvalidate();
+            }
+        }
     }
 
     private void checkView() {
@@ -180,6 +188,7 @@ public class DanMuLayout extends RelativeLayout {
              * 2016年11月21日15:21:20
              * create by bin
              */
+            float speed = 5;
             dMA.getPoint().x -= (measureText + screenWidth) / (DURING_TIME / 17);//在该算法下 弹幕越长 速度越快
             if (dMA.getPoint().x < -measureText) {
                 dMAList.remove(i);
@@ -188,7 +197,7 @@ public class DanMuLayout extends RelativeLayout {
     }
 
     /**
-     * 添加一条text弹幕(新)
+     * 添加一条text弹幕
      * 2016年11月21日18:09:23
      * by bin
      */
@@ -217,12 +226,16 @@ public class DanMuLayout extends RelativeLayout {
         addDanMuView(view);
     }
 
+    /**
+     * 添加一条view弹幕
+     * @param view 需要显示的弹幕控件
+     */
     public void addDanMuView(final View view) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
                 final int verticalMargin = getRandomTopMargin();
-                handler.post(new Runnable() {
+                post(new Runnable() {
                     @Override
                     public void run() {
                         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -245,6 +258,10 @@ public class DanMuLayout extends RelativeLayout {
      */
     private int getRandomTopMargin() {
         while (true) {
+            if(validHeightSpace==0){
+                validHeightSpace = getHeight();
+            }
+
             int randomIndex = (int) (Math.random() * linesCount);
             int marginValue = randomIndex * (validHeightSpace / linesCount);
 
@@ -259,7 +276,11 @@ public class DanMuLayout extends RelativeLayout {
         danMuSwitch = true;
         handler.removeMessages(ADD_DANMU);
         handler.sendEmptyMessageDelayed(ADD_DANMU, DANMU_TIME_INTERVAL);
-        invalidate();
+        if(Build.VERSION.SDK_INT >= 16) {
+            this.postInvalidateOnAnimation();
+        } else {
+            this.postInvalidate();
+        }
     }
 
     public void stopDanMu() {
@@ -286,7 +307,7 @@ public class DanMuLayout extends RelativeLayout {
 
     /**
      * 设置弹幕行数
-     * 默认行数为 3
+     * 默认行数为 高度/字体大小
      */
     public void setDanMuLines(int linesCount) {
         this.linesCount = linesCount;

@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i<100;i++) {
             TextView textView = new TextView(this);
             textView.setText("ahdihaiohdiaiudhiuh"+text+"--------"+i);
-            textView.setBackgroundColor(0xffaabbcc);
             dml.addDanMuView(textView);
         }
 

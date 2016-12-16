@@ -32,11 +32,11 @@ public class DanMuLayout extends RelativeLayout {
     private final static int DANMU_DEFAULT_TEXT_SIZE = 22;
     private final static int DANMU_DEFAULT_TEXT_COLOR = 0xffffffff;
     private final static int DANMU_DEFAULT_VALID_HEIGHT_SPACE = 500;
-    private final static int DANMU_DEFAULT_LINES_COUNT = 10;
+    private final static int DANMU_DEFAULT_LINES_COUNT = 5;
 
     /****************TIME start********************/
     private final static int DANMU_TIME_INTERVAL = 500;//弹幕发射时间间隔
-    private final static int DANMU_REMOVE_TIME = 1000;//移除占用时间间隔, 防止重叠
+    private final static int DANMU_REMOVE_TIME = 5000;//移除占用时间间隔, 防止重叠
     private final static int DURING_TIME = 12000;//每条text弹幕的持续时间
     /****************TIME end********************/
 
@@ -236,18 +236,23 @@ public class DanMuLayout extends RelativeLayout {
             @Override
             public void run() {
                 final int verticalMargin = getRandomTopMargin();
-                post(new Runnable() {
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                        params.topMargin = verticalMargin;
-                        view.setLayoutParams(params);
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                                params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                                params.topMargin = verticalMargin - view.getMeasuredHeight();
+                                view.setLayoutParams(params);
 
-                        view.setTag(screenWidth);
-                        removeOccupied(verticalMargin);
-                        addView(view);
-                        viewList.add(view);
+                                view.setTag(screenWidth);
+                                removeOccupied(verticalMargin);
+                                addView(view);
+                                viewList.add(view);
+                            }
+                        });
                     }
                 });
             }

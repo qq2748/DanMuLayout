@@ -1,6 +1,5 @@
 package danmu.habinbin.hello.library;
 
-import android.graphics.Point;
 import android.text.TextPaint;
 
 /**
@@ -9,13 +8,15 @@ import android.text.TextPaint;
  */
 public class DanMuAttributes{
     private TextPaint textPaint;
-    private Point point;
+    private CPoint point;
     private String text;
+    private long dTime;
 
-    public DanMuAttributes(TextPaint textPaint, Point point, String text) {
+    public DanMuAttributes(TextPaint textPaint, CPoint point, String text, long dTime) {
         this.textPaint = textPaint;
         this.point = point;
         this.text = text;
+        this.dTime = dTime;
     }
 
     public TextPaint getTextPaint() {
@@ -26,11 +27,11 @@ public class DanMuAttributes{
         this.textPaint = textPaint;
     }
 
-    public Point getPoint() {
+    public CPoint getPoint() {
         return point;
     }
 
-    public void setPoint(Point point) {
+    public void setPoint(CPoint point) {
         this.point = point;
     }
 
@@ -40,5 +41,23 @@ public class DanMuAttributes{
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public long getdTime() {
+        return dTime;
+    }
+
+    public void setdTime(long dTime) {
+        this.dTime = dTime;
+    }
+
+    public static class CPoint {
+        public float x;
+        public float y;
+
+        public CPoint(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }

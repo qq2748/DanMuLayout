@@ -3,7 +3,6 @@ package danmu.habinbin.hello.library;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
@@ -23,7 +22,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 
-/**
+/*
  * Created by bin
  * 简单弹幕控件
  */
@@ -130,7 +129,6 @@ public class DanMuLayout extends RelativeLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //TODO 其实不应该在OnDraw 调用  即将使用handler代替
         drawText(canvas);
         moveX();
         moveView();
@@ -189,7 +187,9 @@ public class DanMuLayout extends RelativeLayout {
              * create by bin
              */
             float speed = 5;
-            dMA.getPoint().x -= (measureText + screenWidth) / (DURING_TIME / 17);//在该算法下 弹幕越长 速度越快
+            long dTime = dMA.getdTime() + 16;//每次调用加算  //TODO fix me 不知道为什么text弹幕结束前会卡顿一下
+            dMA.getPoint().x = (screenWidth - dTime * ((measureText + screenWidth) / DURING_TIME));//在该算法下 弹幕越长 速度越快
+            dMA.setdTime(dTime);
             if (dMA.getPoint().x < -measureText) {
                 dMAList.remove(i);
             }
@@ -206,7 +206,8 @@ public class DanMuLayout extends RelativeLayout {
             @Override
             public void run() {
                 final int verticalMargin = getRandomTopMargin();
-                dMAList.add(new DanMuAttributes(new TextPaint(txtPaint),new Point(screenWidth, verticalMargin + dip2px(getContext(),DANMU_DEFAULT_TEXT_SIZE)),txt));
+                DanMuAttributes.CPoint point = new DanMuAttributes.CPoint(screenWidth, verticalMargin + dip2px(getContext(), DANMU_DEFAULT_TEXT_SIZE));
+                dMAList.add(new DanMuAttributes(txtPaint, point, txt, 0));
                 removeOccupied(verticalMargin);
             }
         });
@@ -243,7 +244,7 @@ public class DanMuLayout extends RelativeLayout {
                         params.topMargin = verticalMargin;
                         view.setLayoutParams(params);
 
-                        view.setTag(getRight() - getLeft() - getPaddingLeft());
+                        view.setTag(screenWidth);
                         removeOccupied(verticalMargin);
                         addView(view);
                         viewList.add(view);

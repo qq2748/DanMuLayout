@@ -11,7 +11,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import danmu.habinbin.hello.library.DanMuInfo;
 import danmu.habinbin.hello.library.DanMuLayout;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,9 +32,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-        String text = "adjaiojdoajdinenjkbhiuhadsdhuawiuh";
+        String text = "啊啊,这是一个弹幕";
         for(int i = 0; i<100;i++) {
-            danMuList.add(new DanMu(text+=text2, DanMuInfo.DanMuType.TEXT,"我的名字"));
+            TextView textView = new TextView(this);
+            textView.setText("ahdihaiohdiaiudhiuh"+text+"--------"+i);
+            textView.setBackgroundColor(0xffaabbcc);
+            dml.addDanMuView(textView);
         }
 
         dml.addAllDanMu(danMuList);
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         dml.addDanMuText("呵呵,这是一个纯text弹幕");
 
         TextView textView = new TextView(MainActivity.this);
+        textView.setBackgroundColor(0xffaabbcc);
         textView.setText("啊啊,这是一个view弹幕");
         dml.addDanMuView(textView);
 
